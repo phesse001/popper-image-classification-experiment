@@ -1,0 +1,6 @@
+[servers]
+10.6.7.1
+[servers:vars]
+ansible_connection=ssh
+asible_user=phesse001
+ansible_ssh_pass=$trawBerryFieldsForever

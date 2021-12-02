@@ -1,0 +1,8 @@
+steps:
+- id: experiment orchestration
+  uses: "sh"
+  runs: [ansible-playbook, -i, hosts, experiment.yml] 
+
+- id: validate
+
+- id: visualize
