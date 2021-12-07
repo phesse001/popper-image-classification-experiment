@@ -1,0 +1,14 @@
+---
+- name: Install git
+  apt:
+    name: git
+
+- name: Pull code
+    ansible.builtin.git:
+      repo: https://github.com/phesse001/image-classification.git
+      dest: /root/home
+      single_branch: yes
+      version: master
+
+- name: Run code
+  command: "python3 /root/home/image-classification/imageClassifierTest.py"

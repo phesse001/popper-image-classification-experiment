@@ -1,9 +1,27 @@
 steps:
-- id: infrastructure provisioning
-  uses:
+- id: infrastructure-provisioning
+  uses: './host'
+  runs: [bash, -uexc]
+  args: 
+  - |
+    terraform init
+    terraform apply -auto-approve
+  options: {volumes: ["/home/phesse/.aws:/root/.aws", "/home/phesse/popper-image-classification-experiment/terraform:/workspace"]}
 
-- id: experiment orchestration
-  uses: "sh"
-  runs: [ansible-playbook, -i, hosts, experiment.yml] 
+- id: create-hostfile
+  uses: 'sh'
+  runs: ["python3", "create_hostfile.py"]
 
-- id: visualize
+- id: install-packages
+  uses: './ansible'
+  runs: [bash, -exc]
+  args:
+  - |
+    ansible-playbook -i hosts packages.yml
+ 
+- id: run-experiment
+  uses: './ansible'
+  runs: [bash, -exc]
+  args:
+  - |
+    ansible-playbook -i hosts experiment.yml
