@@ -1,12 +1,21 @@
 steps:
+- id: generate-keys
+  uses: './ssh'
+  runs: ['ssh-keygen', '-b', '2048', '-t', 'rsa', '-f', '/workspace/.ssh/aws_key', '-q', '-P', '']
+  dir: /workspace/.ssh
+
 - id: infrastructure-provisioning
   uses: './host'
   runs: [bash, -uexc]
   args: 
   - |
     terraform init
-    terraform apply -auto-approve
-  options: {volumes: ["/home/phesse/.aws:/root/.aws", "/home/phesse/popper-image-classification-experiment/terraform:/workspace"]}
+    terraform apply -auto-approve -var="credentials_file=/root/.aws/credentials" -var="profile=phesse"
+  options:
+    volumes:
+      - /home/phesse/.aws:/root/.aws
+      - /home/phesse/popper-image-classification-experiment/terraform:/workspace
+      - /home/phesse/popper-image-classification-experiment/.ssh:/root/.ssh
 
 - id: create-hostfile
   uses: 'sh'
@@ -14,14 +23,22 @@ steps:
 
 - id: install-packages
   uses: './ansible'
-  runs: [bash, -exc]
+  runs: [bash, -uexc]
+  dir: /root/home/ansible/
   args:
   - |
-    ansible-playbook -i hosts packages.yml
+    ansible-playbook --private-key /root/.ssh/aws_key -i hosts packages.yml
+  options:
+    volumes:
+      - /home/phesse/popper-image-classification-experiment/.ssh:/root/.ssh
  
 - id: run-experiment
   uses: './ansible'
-  runs: [bash, -exc]
+  runs: [bash, -uexc]
+  dir: /root/home/ansible/
   args:
   - |
-    ansible-playbook -i hosts experiment.yml
+    ansible-playbook --private-key /root/.ssh/aws_key -i hosts experiment.yml
+  options:
+    volumes:
+      - /home/phesse/popper-image-classification-experiment/.ssh:/root/.ssh/aws

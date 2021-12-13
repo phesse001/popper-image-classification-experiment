@@ -1,5 +1,5 @@
 [servers]
-ec2-54-161-214-47.compute-1.amazonaws.com
+3.211.57.173
 [servers:vars]
 ansible_connection=ssh
 ansible_user=ubuntu

@@ -1,6 +1,6 @@
 line1 = "[servers]\n"
 
-with open("terraform/public_dns.txt") as f:
+with open("terraform/public_ip.txt") as f:
     line2 = f.readline()
 
 line3 = "\n[servers:vars]\n"

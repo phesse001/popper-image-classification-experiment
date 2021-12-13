@@ -1,8 +1,4 @@
 ---
-- name: Install git
-  apt:
-    name: git
-
 - name: Pull code
     ansible.builtin.git:
       repo: https://github.com/phesse001/image-classification.git
