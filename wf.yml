@@ -42,3 +42,22 @@ steps:
   options:
     volumes:
       - /home/phesse/popper-image-classification-experiment/.ssh:/root/.ssh/aws
+
+- id: visualize-results
+  uses: docker://jupyter/base-notebook
+
+- id: teardown-infrastructure
+  uses: './host'
+  runs: [bash, -uexc]
+  args: 
+  - |
+    terraform destroy -auto-approve -var="credentials_file=/root/.aws/credentials" -var="profile=phesse" 
+  options:
+    volumes:
+      - /home/phesse/.aws:/root/.aws
+      - /home/phesse/popper-image-classification-experiment/terraform:/workspace
+      - /home/phesse/popper-image-classification-experiment/.ssh:/root/.ssh
+
+- id: remove-ssh-keys
+  uses: "sh"
+  runs: ["sudo", "rm", "-r", ".ssh"]
