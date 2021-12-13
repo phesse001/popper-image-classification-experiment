@@ -71,10 +71,10 @@ Since this workflow automatically provisions infrastructure on AWS, credentials 
 To configure your aws credentials, you can follow the instructions [here](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-quickstart.html).
 
 Then the following variables in the `wf.yml` file need to be substituted with their specific paths/names on your system:
-- <path to aws credentials file>
-- <profile name>
-- <path to .aws directory>
-- <path to root of this repository>
+- `<path to aws credentials file>`
+- `<profile name>`
+- `<path to .aws directory>`
+- `<path to root of this repository>`
 
 Once all of these steps have been completed, the experimental workflow can be automatically executed by running `popper run -f wf.yml` from the root of this directory (where the `wf.yml` file exists)
 
