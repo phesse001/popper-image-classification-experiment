@@ -1,5 +1,0 @@
-[servers]
-3.211.57.173
-[servers:vars]
-ansible_connection=ssh
-ansible_user=ubuntu

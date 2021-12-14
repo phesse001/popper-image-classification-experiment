@@ -1,10 +1,69 @@
 ---
-- name: Pull code
-    ansible.builtin.git:
-      repo: https://github.com/phesse001/image-classification.git
-      dest: /root/home
-      single_branch: yes
-      version: master
+- name: Install dependencies
+  hosts: all
+  tasks:
+    - name: Clean apt-get repo
+      become: yes
+      apt:
+        autoclean: yes
 
-- name: Run code
-  command: "python3 /root/home/image-classification/imageClassifierTest.py"
+    - name: Update and upgrade apt packages
+      become: yes
+      apt:
+        upgrade: yes
+        update_cache: yes
+
+    - name: Install git
+      become: yes
+      apt:
+        name: git
+
+    - name: Install python3.8
+      become: yes
+      apt:
+        name: python3.8
+
+    - name: Install pip
+      become: yes
+      apt:
+        name: python3-pip
+
+    - name: Install numpy python package
+      pip:
+        name: numpy
+
+    - name: Install absl python package
+      pip:
+        name: absl-py
+
+    - name: Install matplotlib
+      pip:
+        name: matplotlib
+    
+    - name: Install torch python package
+      pip:
+        name: torch
+        version: 
+        extra_args: -f https://download.pytorch.org/whl/cpu/torch_stable.html
+
+    - name: Install torchvision python package
+      pip:
+        name: torchvision
+        version: 0.11.1+cpu
+        extra_args: -f https://download.pytorch.org/whl/cpu/torch_stable.html
+
+    - name: Pull code
+      become: yes
+      ansible.builtin.git:
+          repo: https://github.com/phesse001/image-classification.git
+          dest: /experiment
+          clone: yes
+          single_branch: yes
+
+    - name: Run code
+      command: "python3 /experiment/imageClassifierTest.py --num_threads=1"
+
+    - name: Fetch results
+      ansible.builtin.fetch:
+        src: /experiment/results.txt
+        dest: /home/phesse/popper-image-classification-experiment/results.txt

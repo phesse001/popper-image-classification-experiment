@@ -21,30 +21,20 @@ steps:
   uses: 'sh'
   runs: ["python3", "create_hostfile.py"]
 
-- id: install-packages
-  uses: './ansible'
-  runs: [bash, -uexc]
-  dir: /root/home/ansible/
-  args:
-  - |
-    ansible-playbook --private-key /root/.ssh/aws_key -i hosts packages.yml
-  options:
-    volumes:
-      - /home/phesse/popper-image-classification-experiment/.ssh:/root/.ssh
- 
 - id: run-experiment
   uses: './ansible'
   runs: [bash, -uexc]
   dir: /root/home/ansible/
   args:
   - |
-    ansible-playbook --private-key /root/.ssh/aws_key -i hosts experiment.yml
+    ansible-playbook -i hosts experiment.yml
   options:
     volumes:
-      - /home/phesse/popper-image-classification-experiment/.ssh:/root/.ssh/aws
-
+      - /home/phesse/popper-image-classification-experiment/.ssh:/root/.ssh
+ 
 - id: visualize-results
-  uses: docker://jupyter/base-notebook
+  uses: './matplotlib' 
+  runs: ['python3', 'plot_results.py']
 
 - id: teardown-infrastructure
   uses: './host'
