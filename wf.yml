@@ -24,17 +24,22 @@ steps:
 - id: run-experiment
   uses: './ansible'
   runs: [bash, -uexc]
-  dir: /root/home/ansible/
   args:
   - |
     ansible-playbook -i hosts experiment.yml
   options:
     volumes:
       - /home/phesse/popper-image-classification-experiment/.ssh:/root/.ssh
+      - /home/phesse/popper-image-classification-experiment/ansible:/workspace
  
 - id: visualize-results
   uses: './matplotlib' 
   runs: ['python3', 'plot_results.py']
+  options:
+    volumes:
+      - /home/phesse/popper-image-classification-experiment/ansible/results.txt:/workspace/results.txt
+      - /home/phesse/popper-image-classification-experiment/ansible/plot_results.py:/workspace/plot_results.py
+
 
 - id: teardown-infrastructure
   uses: './host'
@@ -47,7 +52,3 @@ steps:
       - /home/phesse/.aws:/root/.aws
       - /home/phesse/popper-image-classification-experiment/terraform:/workspace
       - /home/phesse/popper-image-classification-experiment/.ssh:/root/.ssh
-
-- id: remove-ssh-keys
-  uses: "sh"
-  runs: ["sudo", "rm", "-r", ".ssh"]

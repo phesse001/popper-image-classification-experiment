@@ -23,30 +23,40 @@
       apt:
         name: python3.8
 
+    - name: Install python-wheel
+      become: yes
+      apt:
+        name: python3-wheel
+
     - name: Install pip
       become: yes
       apt:
         name: python3-pip
 
     - name: Install numpy python package
+      become: yes
       pip:
         name: numpy
 
     - name: Install absl python package
+      become: yes
       pip:
         name: absl-py
 
     - name: Install matplotlib
+      become: yes
       pip:
         name: matplotlib
     
     - name: Install torch python package
+      become: yes
       pip:
         name: torch
         version: 
         extra_args: -f https://download.pytorch.org/whl/cpu/torch_stable.html
 
     - name: Install torchvision python package
+      become: yes
       pip:
         name: torchvision
         version: 0.11.1+cpu
@@ -61,9 +71,13 @@
           single_branch: yes
 
     - name: Run code
-      command: "python3 /experiment/imageClassifierTest.py --num_threads=1"
+      become: yes
+      command: "python3 imageClassifierTest.py --num_threads=1"
+      args:
+        chdir: /experiment
 
     - name: Fetch results
       ansible.builtin.fetch:
         src: /experiment/results.txt
-        dest: /home/phesse/popper-image-classification-experiment/results.txt
+        dest: /workspace/results.txt
+        flat: yes

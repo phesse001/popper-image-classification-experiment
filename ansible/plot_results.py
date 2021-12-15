@@ -10,4 +10,4 @@ with open('results.txt', 'r') as f:
         y.append(float(point[1]))
 
 plt.plot(x, y, 'o', color='red')
-plt.savefig('../results.png')
+plt.savefig('results.png')

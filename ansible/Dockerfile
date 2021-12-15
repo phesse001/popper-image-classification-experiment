@@ -9,12 +9,6 @@ RUN apt-get update && \
 
 RUN pip3 install ansible
 
-ADD hosts /root/home/ansible/hosts
-ADD experiment.yml /root/home/ansible/experiment.yml
-ADD ansible.cfg /root/home/ansible/ansible.cfg
-
 RUN echo "    IdentityFile /root/.ssh/aws_key" >> /etc/ssh/ssh_config
 RUN echo "    PubkeyAuthentication yes" >> /etc/ssh/ssh_config
 RUN echo "    StrictHostKeyChecking no" >> /etc/ssh/ssh_config
-
-WORKDIR /root/home/ansible
